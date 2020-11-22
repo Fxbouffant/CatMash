@@ -134,28 +134,28 @@ namespace CatMash.Api.CosmosDb
             }
 
             // PartitionKey cannot be null
-            if (string.IsNullOrEmpty(item.Id))
+            if (string.IsNullOrEmpty(item.CatId))
             {
-                throw new ArgumentNullException(nameof(item.Id), "Id cannot be null");
+                throw new ArgumentNullException(nameof(item.CatId), "CatId cannot be null");
             }
 
             try
             {
                 ItemResponse<CatRanking> response =
-                    await _catRankingsContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
-
-                if (response.StatusCode == HttpStatusCode.Created)
+                    await _catRankingsContainer.UpsertItemAsync(item, new PartitionKey(item.CatId));
+                
+                if (response.StatusCode == HttpStatusCode.Created || response.StatusCode == HttpStatusCode.Accepted || response.StatusCode == HttpStatusCode.OK)
                 {
                     return response.Resource;
                 }
 
                 _logger.LogError("Unable to UpsertItemAsync ({catId}, {statusCode})",
-                    item.Id, response.StatusCode);
+                    item.CatId, response.StatusCode);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Unable to UpsertItemAsync ({catId})",
-                    item.Id);
+                    item.CatId);
             }
 
             return null;

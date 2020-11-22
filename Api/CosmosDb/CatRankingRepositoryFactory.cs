@@ -37,16 +37,16 @@ namespace CatMash.Api.CosmosDb
             try
             {
                 DatabaseResponse dbResponse = await _cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
-                if (dbResponse.StatusCode == HttpStatusCode.Accepted || dbResponse.StatusCode == HttpStatusCode.Created)
+                if (dbResponse.StatusCode == HttpStatusCode.Accepted || dbResponse.StatusCode == HttpStatusCode.Created || dbResponse.StatusCode == HttpStatusCode.OK)
                 {
                     ContainerResponse containerResponse =
                         await dbResponse.Database.CreateContainerIfNotExistsAsync(ContainerId, PartitionKeyPath);
 
-                    if (containerResponse.StatusCode == HttpStatusCode.Accepted || containerResponse.StatusCode == HttpStatusCode.Created)
+                    if (containerResponse.StatusCode == HttpStatusCode.Accepted || containerResponse.StatusCode == HttpStatusCode.Created || containerResponse.StatusCode == HttpStatusCode.OK)
 
                     {
                         _catRankingRepository =
-                            new CatRankingRepository(_cosmosClient.GetContainer("cat-mash", "Rankings"), _logger);
+                            new CatRankingRepository(_cosmosClient.GetContainer(DatabaseId, ContainerId), _logger);
                         return _catRankingRepository;
                     }
 
