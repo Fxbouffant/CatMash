@@ -10,7 +10,7 @@ namespace CatMash.Api
 {
     public class Startup : FunctionsStartup
     {
-        private const string CosmosDbConnectionStringEnv = "COSMOS_DB_CONNECTION_STRING";
+        public const string CosmosDbConnectionStringEnv = "COSMOS_DB_CONNECTION_STRING";
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
