@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using CatMash.Shared;
 using Microsoft.Azure.Cosmos;
@@ -24,7 +25,7 @@ namespace CatMash.Api.CosmosDb
         /// <summary>
         ///     Get all cat rankings.
         /// </summary>
-        /// <returns>A List containing all cat rankings. <see cref="CatRanking"/></returns>
+        /// <returns>A List containing all cat rankings. <see cref="CatRanking"/>. Null if an error occurred.</returns>
         public async Task<List<CatRanking>> GetAllAsync()
         {
             var result = new List<CatRanking>();
@@ -35,6 +36,7 @@ namespace CatMash.Api.CosmosDb
 
                 using FeedIterator<CatRanking> query =
                     _catRankingsContainer.GetItemQueryIterator<CatRanking>(GetAllQueryText, requestOptions: options);
+
                 while (query.HasMoreResults)
                 {
                     result.AddRange(await query.ReadNextAsync());
@@ -43,6 +45,7 @@ namespace CatMash.Api.CosmosDb
             catch (Exception e)
             {
                 _logger.LogError(e, "Unable to GetAll CatRankings.");
+                return null;
             }
 
             return result;
@@ -52,7 +55,7 @@ namespace CatMash.Api.CosmosDb
         ///     Get a cat ranking by catId.
         /// </summary>
         /// <param name="catId">The id of the cat.</param>
-        /// <returns>The cat ranking. <see cref="CatRanking"/></returns>
+        /// <returns>The cat ranking. <see cref="CatRanking"/> Null if an error occurred.</returns>
         /// <exception cref="ArgumentException">CatId cannot be null.</exception>
         public async Task<CatRanking> GetByIdAsync(string catId)
         {
@@ -116,6 +119,46 @@ namespace CatMash.Api.CosmosDb
             }
 
             return false;
+        }
+
+        /// <summary>
+        ///     Upsert a CatRaking item.
+        /// </summary>
+        /// <param name="item">The item to upsert.</param>
+        /// <returns>The created item. Null if an error occurred.</returns>
+        public async Task<CatRanking> UpsertItemAsync(CatRanking item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            // PartitionKey cannot be null
+            if (string.IsNullOrEmpty(item.Id))
+            {
+                throw new ArgumentNullException(nameof(item.Id), "Id cannot be null");
+            }
+
+            try
+            {
+                ItemResponse<CatRanking> response =
+                    await _catRankingsContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    return response.Resource;
+                }
+
+                _logger.LogError("Unable to UpsertItemAsync ({catId}, {statusCode})",
+                    item.Id, response.StatusCode);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unable to UpsertItemAsync ({catId})",
+                    item.Id);
+            }
+
+            return null;
         }
     }
 }

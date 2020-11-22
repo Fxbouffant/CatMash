@@ -26,7 +26,7 @@ namespace CatMash.Api.CosmosDb
         /// <summary>
         ///     Create a CatRankingRepository. 
         /// </summary>
-        /// <returns>The created CatRankingRepository or the existing one if already created.</returns>
+        /// <returns>The created CatRankingRepository or the existing one if already created. Null if an error occurred.</returns>
         public async Task<CatRankingRepository> CreateCatRankingRepositoryAsync()
         {
             if (_catRankingRepository != null)
@@ -50,13 +50,14 @@ namespace CatMash.Api.CosmosDb
                         return _catRankingRepository;
                     }
 
-                    _logger.LogError("Unable to CreateContainerIfNotExistsAsync. ({containerId}, {partitionKeyPath})",
-                        ContainerId, PartitionKeyPath);
+                    _logger.LogError(
+                        "Unable to CreateContainerIfNotExistsAsync. ({containerId}, {partitionKeyPath}, {statusCode})",
+                        ContainerId, PartitionKeyPath, containerResponse.StatusCode);
                     return null;
                 }
 
-                _logger.LogError("Unable to CreateDatabaseIfNotExistsAsync. ({databaseId})",
-                    DatabaseId);
+                _logger.LogError("Unable to CreateDatabaseIfNotExistsAsync. ({databaseId}, {statusCode})",
+                    DatabaseId, dbResponse.StatusCode);
                 return null;
 
             }
