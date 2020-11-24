@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Net.Http;
 using CatMash.Api.CosmosDb;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -23,11 +24,13 @@ namespace CatMash.Api
                 throw new ConfigurationErrorsException($"{CosmosDbConnectionStringEnv} environment variable not found.");
             }
 
+            builder.Services.AddLogging();
             builder.Services.AddSingleton<CosmosClient>(new CosmosClient(cosmosDbConnectionString, new CosmosClientOptions
             {
                 ApplicationName = nameof(CatMash.Api)
             }));
             builder.Services.AddSingleton<CatRankingRepositoryFactory>();
+            builder.Services.AddSingleton(new HttpClient());
         }
     }
 }

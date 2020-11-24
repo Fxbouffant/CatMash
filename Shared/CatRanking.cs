@@ -13,6 +13,9 @@ namespace CatMash.Shared
         [JsonProperty(PropertyName = "counter")]
         public int VoteCount { get; set; }
 
+        [JsonProperty(PropertyName = "imageurl")]
+        public string ImageUrl { get; set; }
+
         public string PartitionKey => this.CatId;
 
         public static string PartitionKeyPath => "/catid";
