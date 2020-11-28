@@ -4,7 +4,7 @@ using CatMash.Shared;
 
 namespace CatMash.Api.CosmosDb
 {
-    interface ICatRankingRepository : IRepository<CatRanking>
+    public interface ICatRankingRepository : IRepository<CatRanking>
     {
         public Task<bool> VoteAsync(string catId);
     }

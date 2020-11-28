@@ -15,7 +15,7 @@ namespace CatMash.Api.CosmosDb
         private readonly CosmosClient _cosmosClient;
         private readonly ILogger<CatRankingRepository> _logger;
 
-        private CatRankingRepository _catRankingRepository;
+        private ICatRankingRepository _catRankingRepository;
 
         public CatRankingRepositoryFactory(CosmosClient cosmosClient, ILogger<CatRankingRepository> logger)
         {
@@ -27,7 +27,7 @@ namespace CatMash.Api.CosmosDb
         ///     Create a CatRankingRepository. 
         /// </summary>
         /// <returns>The created CatRankingRepository or the existing one if already created. Null if an error occurred.</returns>
-        public async Task<CatRankingRepository> CreateCatRankingRepositoryAsync()
+        public async Task<ICatRankingRepository> CreateCatRankingRepositoryAsync()
         {
             if (_catRankingRepository != null)
             {
