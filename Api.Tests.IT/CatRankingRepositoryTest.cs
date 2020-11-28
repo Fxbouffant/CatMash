@@ -35,7 +35,6 @@ namespace Api.Tests.IT
     public class CatRankingRepositoryTest : IClassFixture<RepositoryFixture>
     {
         private const string TestPrefix = "TEST-";
-
         private RepositoryFixture _fixture;
 
         public CatRankingRepositoryTest(RepositoryFixture fixture)
@@ -46,7 +45,7 @@ namespace Api.Tests.IT
         [Fact]
         public async Task UpsertTest()
         {
-            CatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
+            ICatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
 
             CatRanking catRanking = await repository.UpsertItemAsync(new CatRanking
             {
@@ -60,7 +59,7 @@ namespace Api.Tests.IT
         [Fact]
         public async Task GetByIdTest()
         {
-            CatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
+            ICatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
 
             CatRanking catRanking = await repository.UpsertItemAsync(new CatRanking
             {
@@ -78,7 +77,7 @@ namespace Api.Tests.IT
         [Fact]
         public async Task GetAllTest()
         {
-            CatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
+            ICatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
 
             for (int i = 0; i < 5; i++)
             {
@@ -99,7 +98,7 @@ namespace Api.Tests.IT
         [Fact]
         public async Task VoteTest()
         {
-            CatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
+            ICatRankingRepository repository = await _fixture.RepositoryFactory.CreateCatRankingRepositoryAsync();
 
             CatRanking catRanking = await repository.UpsertItemAsync(new CatRanking
             {

@@ -11,7 +11,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace CatMash.Api
+namespace CatMash.Api.Functions
 {
     public class InitDbFunction
     {
@@ -58,7 +58,7 @@ namespace CatMash.Api
                 return new InternalServerErrorResult();
             }
 
-            CatRankingRepository repository = await _catRankingRepositoryFactory.CreateCatRankingRepositoryAsync();
+            ICatRankingRepository repository = await _catRankingRepositoryFactory.CreateCatRankingRepositoryAsync();
 
             if (repository == null)
             {
