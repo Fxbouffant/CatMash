@@ -1,5 +1,62 @@
 ﻿@page "/"
+@using CatMash.Shared
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+@if (_randomCatRankings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container-fluid h-md-100 clickable">
+        <div class="row text-center h-md-100">
+            <div class="col-sm left-side" @onclick="() => VoteCatAsync(_randomCatRankings[0].CatId)">
+                <h1>CAT</h1>
+                <div class="cat-image">
+                    <img src="@_randomCatRankings[0].ImageUrl" alt="left-side-cat" class="img-fluid"/>
+                </div>
+            </div>
+            <div class="col-sm right-side" @onclick="() => VoteCatAsync(_randomCatRankings[1].CatId)">
+                <h1>MASH</h1>
+                <div class="cat-image">
+                    <img src="@_randomCatRankings[1].ImageUrl" alt="left-side-cat" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-Welcome to your new app.
+@code {
+    private List<CatRanking> _randomCatRankings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRandomCatsAsync();
+    }
+
+    private async Task LoadRandomCatsAsync()
+    {
+        try
+        {
+            _randomCatRankings = await Http.GetFromJsonAsync<List<CatRanking>>("/api/random");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    private async Task VoteCatAsync(string catId)
+    {
+        try
+        {
+            await Http.PostAsync($"api/vote/{catId}", null);
+            await LoadRandomCatsAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+}
