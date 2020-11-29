@@ -1,0 +1,55 @@
+﻿@page "/rankings"
+@using CatMash.Shared
+@inject HttpClient Http
+
+@if (_catRankings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Picture</th>
+            <th scope="col">Number of votes</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < _catRankings.Count; i++)
+        {
+            <tr>
+                <th scope="row">@(i + 1)</th>
+                <td>
+                    <img src="@_catRankings[i].ImageUrl" alt="@_catRankings[i].Id" class="miniature" />
+                </td>
+                <td>@_catRankings[i].VoteCount</td>
+            </tr>
+
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<CatRanking> _catRankings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCatRankingsAsync();
+    }
+
+    private async Task LoadCatRankingsAsync()
+    {
+        try
+        {
+            _catRankings = await Http.GetFromJsonAsync<List<CatRanking>>("/api/rankings");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}
