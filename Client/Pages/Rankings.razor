@@ -1,40 +1,46 @@
 ﻿@page "/rankings"
 @using CatMash.Shared
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
+@inject ILogger<CatRanking> Logger
 
-@if (_catRankings == null)
+@if (_catRankings != null)
 {
-    <p><em>Loading...</em></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Picture</th>
+                <th scope="col">Number of votes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < _catRankings.Count; i++)
+            {
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>
+                        <img src="@_catRankings[i].ImageUrl" alt="@_catRankings[i].Id" class="miniature" />
+                    </td>
+                    <td>@_catRankings[i].VoteCount</td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+else if (_loadFailed)
+{
+    <h1>Sorry, we could not load this page due to an error.</h1>
 }
 else
 {
-    
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Picture</th>
-            <th scope="col">Number of votes</th>
-        </tr>
-        </thead>
-        <tbody>
-        @for (int i = 0; i < _catRankings.Count; i++)
-        {
-            <tr>
-                <th scope="row">@(i + 1)</th>
-                <td>
-                    <img src="@_catRankings[i].ImageUrl" alt="@_catRankings[i].Id" class="miniature" />
-                </td>
-                <td>@_catRankings[i].VoteCount</td>
-            </tr>
-
-        }
-        </tbody>
-    </table>
+    <p><em>Loading...</em></p>
 }
 
 @code {
     private List<CatRanking> _catRankings;
+    private bool _loadFailed;
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,11 +51,13 @@ else
     {
         try
         {
+            _loadFailed = false;
             _catRankings = await Http.GetFromJsonAsync<List<CatRanking>>("/api/rankings");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.ToString());
+            _loadFailed = true;
+            Logger.LogError(ex, "Unable to load cats rankings from /api/rankings");
         }
     }
 }
