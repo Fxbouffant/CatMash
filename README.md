@@ -14,9 +14,9 @@ There are two pages:
 
 ## Technologies used
 
-This project is based on Azure Static Web App https://azure.microsoft.com/en-us/services/app-service/static/
-You can get the template here: https://github.com/staticwebdev/blazor-starter
+This project is based on Azure Static Web App https://azure.microsoft.com/en-us/services/app-service/static/  
+You can get the template here: https://github.com/staticwebdev/blazor-starter  
 
-Front-End Javascript is generated using Blazor https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor
-The Backend API is build using Azure Functions https://azure.microsoft.com/en-us/services/functions/
-CosmosDB is used for the database https://azure.microsoft.com/en-us/services/cosmos-db/
+Front-End Javascript is generated using Blazor https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor  
+The Backend API is build using Azure Functions https://azure.microsoft.com/en-us/services/functions/  
+CosmosDB is used for the database https://azure.microsoft.com/en-us/services/cosmos-db/  
