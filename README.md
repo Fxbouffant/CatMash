@@ -1,24 +1,22 @@
-# Blazor Starter Application
+# CatMash
 
-This template contains an example [Blazor WebAssembly](https://docs.microsoft.com/aspnet/core/blazor/?view=aspnetcore-3.1#blazor-webassembly) client application, a C# [Azure Functions](https://docs.microsoft.com/azure/azure-functions/functions-overview) and a C# class library with shared code.
+This is a small web application which is based on the Facemash project but for cute cats. It uses data from https://latelier.co/data/cats.json.
 
-## Getting Started
+There are two pages:
+* **The index page "https://mango-dune-0263ed003.azurestaticapps.net/"**: allows the user to vote for a cat
+* **The rankings pages "https://mango-dune-0263ed003.azurestaticapps.net/rankings"**: allows the user to see the cat rankings
 
-Create a repository from the [GitHub template](https://docs.github.com/en/enterprise/2.22/user/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) and then clone it locally to your machine.
+## Project Structure
 
-Once you clone the project, open the solution in [Visual Studio](https://visualstudio.microsoft.com/vs/community/) and follow these steps:
-
-- Rename `local.settings.example.json` to `local.settings.json`
-- Press **F5** to launch both the client application and the Functions API app
-
-_Note: If you're using the Azure Functions CLI tools, refer to [the documentation](https://docs.microsoft.com/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash) on how to enable CORS._
-
-## Template Structure
-
-* **Client**: The Blazor WebAssembly sample application
+* **Client**: The Blazor WebAssembly application
 * **API**: A C# Azure Functions API, which the Blazor application will call
 * **Shared**: A C# class library with a shared data model between the Blazor and Functions application
 
-## Deploy to Azure Static Web Apps
+## Technologies used
 
-This application can be deployed to [Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps), to learn how, check out [our quickstart guide](https://aka.ms/blazor-swa/quickstart).
+This project is based on Azure Static Web App https://azure.microsoft.com/en-us/services/app-service/static/
+You can get the template here: https://github.com/staticwebdev/blazor-starter
+
+Front-End Javascript is generated using Blazor https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor
+The Backend API is build using Azure Functions https://azure.microsoft.com/en-us/services/functions/
+CosmosDB is used for the database https://azure.microsoft.com/en-us/services/cosmos-db/
