@@ -10,8 +10,8 @@ There are two pages:
 
 * **Client**: The Blazor WebAssembly application
 * **API**: A C# Azure Functions API, which the Blazor application will call
+* **API.Tests.IT**: Integration tests for the CatRankingsRepository
 * **Shared**: A C# class library with a shared data model between the Blazor and Functions application
-
 ## Technologies used
 
 This project is based on Azure Static Web App https://azure.microsoft.com/en-us/services/app-service/static/  
