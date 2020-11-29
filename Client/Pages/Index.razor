@@ -1,19 +1,17 @@
 ﻿@page "/"
 @using CatMash.Shared
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
+@inject ILogger<CatRanking> Logger
 
-@if (_randomCatRankings == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
+@if (_randomCatRankings != null)
 {
     <div class="container-fluid h-md-100 clickable">
         <div class="row text-center h-md-100">
             <div class="col-sm left-side" @onclick="() => VoteCatAsync(_randomCatRankings[0].CatId)">
                 <h1>CAT</h1>
                 <div class="cat-image">
-                    <img src="@_randomCatRankings[0].ImageUrl" alt="left-side-cat" class="img-fluid"/>
+                    <img src="@_randomCatRankings[0].ImageUrl" alt="left-side-cat" class="img-fluid" />
                 </div>
             </div>
             <div class="col-sm right-side" @onclick="() => VoteCatAsync(_randomCatRankings[1].CatId)">
@@ -25,9 +23,23 @@ else
         </div>
     </div>
 }
+else if (_loadFailed)
+{
+    <h1>Sorry, we could not load this page due to an error.</h1>
+}
+else if (_voteFailed)
+{
+    <h1>Sorry, unable to vote for this cat due to an error.</h1>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
 
 @code {
     private List<CatRanking> _randomCatRankings;
+    private bool _loadFailed;
+    private bool _voteFailed;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,11 +50,13 @@ else
     {
         try
         {
+            _loadFailed = false;
             _randomCatRankings = await Http.GetFromJsonAsync<List<CatRanking>>("/api/random");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.ToString());
+            _loadFailed = true;
+            Logger.LogError(ex, "Unable to load random cats from /api/random");
         }
     }
 
@@ -50,13 +64,14 @@ else
     {
         try
         {
+            _voteFailed = false;
             await Http.PostAsync($"api/vote/{catId}", null);
             await LoadRandomCatsAsync();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
-            throw;
+            _voteFailed = true;
+            Logger.LogError(ex, "Unable to vote for cat. ({catId})", catId);
         }
     }
 }
